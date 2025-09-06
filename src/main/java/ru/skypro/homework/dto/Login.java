@@ -2,7 +2,8 @@ package ru.skypro.homework.dto;
 
 // используется для передачи данных от фронтенда к бэкенду при попытке входа пользователя в систему
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data

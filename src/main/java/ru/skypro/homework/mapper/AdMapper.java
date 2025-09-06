@@ -10,7 +10,7 @@ import ru.skypro.homework.responseDto.ExtendedAdDto;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AdMapper {
     AdMapper INSTANCE = Mappers.getMapper(AdMapper.class);
 

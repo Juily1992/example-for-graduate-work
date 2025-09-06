@@ -1,21 +1,19 @@
 package ru.skypro.homework.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -26,16 +24,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         System.out.println("Найден в БД: " + user.getUsername());
         System.out.println(" Хэш пароля из БД: " + user.getPassword());
-        System.out.println("Проверяю через PasswordEncoder: " + passwordEncoder.getClass().getSimpleName());
+        System.out.println("Роль: " + user.getRole());
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
-                .accountExpired(false)
-                .accountLocked(false)
-                .credentialsExpired(false)
-                .disabled(false)
                 .build();
     }
 }

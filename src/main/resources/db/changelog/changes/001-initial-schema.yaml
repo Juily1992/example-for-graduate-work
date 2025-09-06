@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: your_name
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column: {name: id, type: bigint, autoIncrement: true, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: username, type: varchar(255), constraints: {nullable: false, unique: true}}
+              - column: {name: first_name, type: varchar(255)}
+              - column: {name: last_name, type: varchar(255)}
+              - column: {name: phone, type: varchar(20)}
+              - column: {name: email, type: varchar(255), constraints: {unique: true}}
+              - column: {name: password, type: varchar(255)}
+              - column: {name: role, type: varchar(10)}
+              - column: {name: image, type: varchar(255)}
+              - column: {name: created_at, type: timestamp}
+
+        - createTable:
+            tableName: ad
+            columns:
+              - column: {name: id, type: bigint, autoIncrement: true, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: author_id, type: bigint, constraints: {nullable: false}}
+              - column: {name: title, type: varchar(255)}
+              - column: {name: price, type: integer}
+              - column: {name: description, type: text}
+              - column: {name: image, type: varchar(255)}
+              - column: {name: created_at, type: timestamp}
+
+        - createTable:
+            tableName: comment
+            columns:
+              - column: {name: id, type: bigint, autoIncrement: true, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: ad_id, type: bigint, constraints: {nullable: false}}
+              - column: {name: author_id, type: bigint, constraints: {nullable: false}}
+              - column: {name: text, type: text}
+              - column: {name: created_at, type: timestamp}
+
+  - changeSet:
+      id: 2
+      author: your_name
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: ad
+            baseColumnNames: author_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_ad_author
+
+        - addForeignKeyConstraint:
+            baseTableName: comment
+            baseColumnNames: ad_id
+            referencedTableName: ad
+            referencedColumnNames: id
+            constraintName: fk_comment_ad
+
+        - addForeignKeyConstraint:
+            baseTableName: comment
+            baseColumnNames: author_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_comment_author

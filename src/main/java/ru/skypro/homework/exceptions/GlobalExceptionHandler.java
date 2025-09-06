@@ -13,6 +13,15 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UsernameExistsException.class)
+    public ResponseEntity<Map<String, String>> handleUsernameExistsException(UsernameExistsException e) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", e.getMessage());
+        response.put("error", "Conflict");
+        response.put("status", "409");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<String> handleMaxSizeException(MaxUploadSizeExceededException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

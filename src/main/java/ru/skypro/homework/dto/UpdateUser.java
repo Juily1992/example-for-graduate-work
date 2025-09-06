@@ -2,7 +2,9 @@ package ru.skypro.homework.dto;
 
 // класс для передачи данных при обновлении информации об  авторизованном пользователе
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data

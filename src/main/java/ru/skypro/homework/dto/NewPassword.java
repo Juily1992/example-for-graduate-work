@@ -2,7 +2,8 @@ package ru.skypro.homework.dto;
 
 //  отвечает за передачу данных при смене пароля пользователя в приложении.
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data

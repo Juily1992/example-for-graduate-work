@@ -3,7 +3,6 @@ package ru.skypro.homework.mapper;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
-
 import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.dto.UpdateUser;
@@ -16,9 +15,7 @@ import java.time.LocalDateTime;
  * Маппер для преобразования DTO в сущность User и обратно.
  * Использует @ObjectFactory для корректной инициализации User при использовании @Builder.
  */
-@Mapper(
-        imports = {Role.class, LocalDateTime.class}
-)
+@Mapper
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
@@ -29,9 +26,9 @@ public interface UserMapper {
      */
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "role", expression = "java(Role.USER)")
+    @Mapping(target = "role", ignore = true)
     @Mapping(target = "image", ignore = true)
-    @Mapping(target = "createdAt", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "createdAt", ignore = true)
     User toUser(Register register);
 
     /**
@@ -46,6 +43,7 @@ public interface UserMapper {
      * username используется как email.
      */
     @Mapping(source = "username", target = "email")
+    @Mapping(source = "image", target = "image", qualifiedByName = "addUserImagePrefix")
     UserDto toUserDto(User user);
 
     /**
@@ -70,14 +68,23 @@ public interface UserMapper {
             user.setPhone("");
         }
 
+        // Устанавливаем дефолты
         user.setRole(Role.USER);
         user.setCreatedAt(LocalDateTime.now());
-        System.out.println("Пользователь создан: " + user.getUsername());
+    }
+
+
+    @Named("addUserImagePrefix")
+    default String addUserImagePrefix(String image) {
+        if (image == null || image.isBlank()) {
+            return "/images/users/default.jpg";
+        }
+        return "/images/users/" + image;
     }
 
     /**
      * Выполняется ПОСЛЕ обновления пользователя.
-     * Проверяет и очищает поля.
+     * Можно добавить валидацию или логирование.
      */
     @AfterMapping
     default void afterUpdateUser(UpdateUser dto, @MappingTarget User user) {
@@ -93,6 +100,7 @@ public interface UserMapper {
             user.setPhone("");
         }
 
-        System.out.println("Профиль обновлён: " + user.getUsername());
+        // Пример логирования (в реальном проекте используйте Logger)
+        System.out.println("✅ Профиль обновлён: " + user.getUsername());
     }
 }

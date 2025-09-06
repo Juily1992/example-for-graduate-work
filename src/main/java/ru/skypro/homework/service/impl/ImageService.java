@@ -1,16 +1,14 @@
 package ru.skypro.homework.service.impl;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.Resource;
-
-import java.nio.file.Files;
-
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;

@@ -1,7 +1,6 @@
 package ru.skypro.homework.mapper;
 
 import org.mapstruct.*;
-import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.responseDto.CommentDto;
@@ -9,7 +8,7 @@ import ru.skypro.homework.responseDto.CommentDto;
 import java.time.ZoneOffset;
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 

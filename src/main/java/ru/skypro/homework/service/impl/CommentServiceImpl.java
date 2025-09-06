@@ -1,9 +1,9 @@
 package ru.skypro.homework.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.mapper.CommentMapper;
@@ -28,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final AdRepository adRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
 
     private static final Logger log = LoggerFactory.getLogger(CommentServiceImpl.class);
 
@@ -35,32 +36,28 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto addComment(Long adId, String username, CreateOrUpdateComment dto) {
         log.info("Добавление комментария к объявлению ID: {} от пользователя: {}", adId, username);
 
-        // 1. Находим объявление
         Ad ad = adRepository.findById(adId)
                 .orElseThrow(() -> {
                     log.warn("Объявление не найдено: ID={}", adId);
                     return new EntityNotFoundException("Ad not found");
                 });
 
-        // 2. Находим автора
         User author = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
                     log.warn("Пользователь не найден: {}", username);
                     return new EntityNotFoundException("User not found");
                 });
 
-        // 3. Создаём комментарий
         Comment comment = new Comment();
         comment.setAd(ad);
         comment.setAuthor(author);
         comment.setText(dto.getText());
         comment.setCreatedAt(LocalDateTime.now());
 
-        // 4. Сохраняем
         Comment saved = commentRepository.save(comment);
 
-        // 5. Используем MapStruct для маппинга
-        CommentDto result = CommentMapper.INSTANCE.toCommentDto(saved);
+        // ✅ Используем внедрённый маппер
+        CommentDto result = commentMapper.toCommentDto(saved);
 
         log.info("Комментарий успешно добавлен, ID: {}", result.getPk());
         return result;
